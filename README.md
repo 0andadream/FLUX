@@ -4,7 +4,7 @@
 
 Flux is a studio for the Celo Agents on Open Rails hackathon, on the Build with buy track. You write a prompt, Flux fetches a live price from the service that will do the work, and your wallet signs a stablecoin authorization. The result appears after that payment settles. The app keeps the transaction hash so a judge can open it on Celoscan.
 
-There is no hosted demo in this repository. A payment counts when a connected wallet produces a hash.
+The public app is [https://flux.mattt-dreamer.workers.dev](https://flux.mattt-dreamer.workers.dev). A payment counts when a connected wallet produces a hash. This deploy does not include a settlement.
 
 - **Track:** Build with buy, [Agents on Open Rails](https://www.loops.house/agents-on-open-rails)
 - **Chain:** Celo mainnet, chain id `42220`
@@ -212,6 +212,15 @@ npm run dev
 
 Open http://localhost:3000.
 
+Deploy the same app to Cloudflare Workers. Wrangler 4 needs Node.js 22.
+
+```bash
+npx wrangler login
+npm run deploy
+```
+
+`npm run deploy` builds with OpenNext and uploads the Worker named `flux`. The account id is pinned in `wrangler.jsonc`. The current deployment is [https://flux.mattt-dreamer.workers.dev](https://flux.mattt-dreamer.workers.dev). Do not commit `.dev.vars` or an API key. If you want the Agent page to call Grok, set the secret with `npx wrangler secret put XAI_API_KEY`.
+
 | Variable | Required | What it does |
 | --- | --- | --- |
 | `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` | No | Turns on WalletConnect. Injected wallets work without it |
@@ -224,13 +233,15 @@ Fund the wallet with a little CELO if you will register an identity, and with US
 
 ## How a judge checks a payment
 
+The public origin is [https://flux.mattt-dreamer.workers.dev](https://flux.mattt-dreamer.workers.dev).
+
 1. Connect a Celo wallet and open Studio.
 2. Use a short prompt. Voice and image are the small purchases. Video is a larger flat quote and can take a few minutes.
 3. Choose **Get price**. Confirm the amount, the token, the payee, and Celo. Nothing has been signed.
 4. Choose **Approve and generate** and sign. That signature is an EIP-3009 authorization. You are not sending a token transfer yourself.
 5. When the result appears, open the transaction on [Celoscan](https://celoscan.io). The payer on Activity is the connected wallet. The payee should match the quote.
 6. For music, the first result is the score. **Price the vocal** is a second payment. Judge them as two settlements.
-7. For the agent identity, deploy on a public HTTPS origin, register from Settings, and open the id on [8004scan](https://8004scan.io/agents/celo/). The registration input ends with the attribution suffix.
+7. For the agent identity, register from Settings on that HTTPS origin, and open the id on [8004scan](https://8004scan.io/agents/celo/). The registration input ends with the attribution suffix.
 
 If a paid call times out, do not sign again until Celoscan shows whether the first authorization settled.
 
@@ -267,7 +278,7 @@ npm run build
 - Quotes probed while building listed USDC for media and USDC, USD₮, and USA₮ for the score. The picker cannot offer a token the 402 did not name.
 - Facilitator settlements are not tagged with ERC-8021. Attribution is on the identity transaction the wallet sends.
 - The repository does not contain an agent id or a pre-recorded settlement. Both require a wallet.
-- Video responses are large and slow. A host that kills the settle route early can leave you with a settlement and no file. Check the hash before you try again.
+- Video responses are large and slow. The public app runs on Cloudflare Workers. Unpaid voice and music quotes succeeded there. A video settle can run for minutes, and if the Worker cuts that request off you can have a settlement and no file. Check the hash before you try again.
 - The $1 ceiling is deliberate. Raise it in `lib/celo.ts` and in the spend controls in `lib/pay.ts` together if a seller’s real price outgrows it.
 - WalletConnect stays off until a project id is set. That is a Cloud project id, not a key that can spend.
 - Activity lives in `localStorage` under `flux.activity.v1`. Another browser, or a cleared site data, starts the list over. The chain does not.
