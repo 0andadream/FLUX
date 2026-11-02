@@ -4,6 +4,7 @@ import { useState, useSyncExternalStore } from "react";
 import { parseEventLogs } from "viem";
 import { useAccount, useSwitchChain, useWriteContract } from "wagmi";
 import { waitForTransactionReceipt } from "wagmi/actions";
+import { Kicker, Knob } from "@/components/frame";
 import { attributionCode, attributionSuffix } from "@/lib/attribution";
 import { CELO_MAINNET_ID, IDENTITY_REGISTRY, REPUTATION_REGISTRY, USDC_FEE_ADAPTER } from "@/lib/celo";
 import { agentScan, celoScanAddress, celoScanTx, shortAddress } from "@/lib/format";
@@ -59,37 +60,38 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-10">
+    <div className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-12 md:py-16">
       <div>
-        <h1 className="text-3xl font-medium tracking-tight">Settings</h1>
-        <p className="mt-2 text-sm leading-6 text-zinc-400">Wallet, preferred stablecoin, and the ERC-8004 identity for this studio.</p>
+        <Kicker index="04">Settings</Kicker>
+        <h1 className="mt-4 text-[clamp(2rem,1.2rem+2vw,3rem)] leading-none font-[340] tracking-[-0.035em]">Wallet, token, identity.</h1>
+        <p className="mt-4 text-[15px] leading-7 text-muted">Preferred stablecoin, and the ERC-8004 identity for this studio.</p>
       </div>
-      <section className="rounded-3xl border border-white/10 p-5">
-        <h2 className="text-sm font-medium">Wallet</h2>
-        <p className="mt-2 text-sm text-zinc-300">{isConnected && address ? shortAddress(address, 6) : "Not connected. Use the button in the header."}</p>
-        <p className="mt-2 text-sm text-zinc-500">
+      <section className="glass rounded-[24px] p-6">
+        <h2 className="kicker">Wallet</h2>
+        <p className="mt-3 text-[15px] text-ink">{isConnected && address ? shortAddress(address, 6) : "Not connected. Use the button in the header."}</p>
+        <p className="mt-2 text-[14px] leading-6 text-muted">
           {walletConnectEnabled ? "WalletConnect is configured." : "WalletConnect is off until NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID is set. An injected wallet such as MetaMask or MiniPay can still connect."}
         </p>
       </section>
-      <section className="rounded-3xl border border-white/10 p-5">
-        <h2 className="text-sm font-medium">Preferred token</h2>
-        <p className="mt-2 text-sm leading-6 text-zinc-400">Used when a quote lists more than one Celo asset. Image, video, and voice quotes seen so far list USDC only. buy.ai can list USDC, USD₮, and USA₮.</p>
+      <section className="glass rounded-[24px] p-6">
+        <h2 className="kicker">Preferred token</h2>
+        <p className="mt-3 text-[14px] leading-6 text-muted">Used when a quote lists more than one Celo asset. Image, video, and voice quotes seen so far list USDC only. buy.ai can list USDC, USD₮, and USA₮.</p>
         <div className="mt-4 flex gap-2">
           {TOKENS.map((token) => (
             <button
               key={token}
               type="button"
               onClick={() => writePreferredToken(token)}
-              className={`rounded-full px-3 py-1.5 text-sm ${preferred === token ? "bg-white text-black" : "border border-white/15 text-zinc-300"}`}
+              className={`chip ${preferred === token ? "chip-on" : ""}`}
             >
               {token === "USAT" ? "USA₮" : token === "USDT" ? "USD₮" : "USDC"}
             </button>
           ))}
         </div>
       </section>
-      <section className="rounded-3xl border border-white/10 p-5">
-        <h2 className="text-sm font-medium">ERC-8004 identity</h2>
-        <p className="mt-2 text-sm leading-6 text-zinc-400">
+      <section className="glass rounded-[24px] p-6">
+        <h2 className="kicker">ERC-8004 identity</h2>
+        <p className="mt-3 text-[14px] leading-6 text-muted">
           Registration mints the agent NFT to the connected wallet and sets that wallet as the agent wallet. The call carries the ERC-8021 attribution suffix. x402 settlements are submitted by the facilitator, which does not attach that suffix yet.
         </p>
         <dl className="mt-4 space-y-2 text-sm">
@@ -99,43 +101,44 @@ export default function SettingsPage() {
           <Row label="Registration file" value={registrationUri || "…"} href={registrationUri || undefined} />
         </dl>
         {localHost ? (
-          <p className="mt-3 text-sm text-amber-200">This origin is local. Mainnet registration should point at a public URL so other agents can read the file.</p>
+          <p className="mt-3 text-[14px] text-[#8A520E]">This origin is local. Mainnet registration should point at a public URL so other agents can read the file.</p>
         ) : null}
         {publishedId ? (
-          <p className="mt-3 text-sm">
+          <p className="mt-3 text-[14px]">
             Published agent id {publishedId}.{" "}
-            <a className="underline decoration-white/20" href={agentScan(publishedId)} target="_blank" rel="noreferrer">
+            <a className="link" href={agentScan(publishedId)} target="_blank" rel="noreferrer">
               View on 8004scan
             </a>
           </p>
         ) : null}
         {identity ? (
-          <p className="mt-3 text-sm text-zinc-300">
+          <p className="mt-3 text-[14px] text-ink">
             This browser registered agent {identity.agentId}.{" "}
-            <a className="underline decoration-white/20" href={agentScan(identity.agentId)} target="_blank" rel="noreferrer">
+            <a className="link" href={agentScan(identity.agentId)} target="_blank" rel="noreferrer">
               8004scan
             </a>
             {" · "}
-            <a className="underline decoration-white/20" href={celoScanTx(identity.txHash)} target="_blank" rel="noreferrer">
+            <a className="link" href={celoScanTx(identity.txHash)} target="_blank" rel="noreferrer">
               registration tx
             </a>
           </p>
         ) : null}
-        <label className="mt-4 flex items-center gap-2 text-sm text-zinc-300">
+        <label className="mt-4 flex items-center gap-2 text-[14px] text-ink">
           <input type="checkbox" checked={payGasInUsdc} onChange={(event) => setPayGasInUsdc(event.target.checked)} />
           Pay registration gas in USDC
         </label>
         <div className="mt-4 flex flex-wrap gap-3">
-          <button type="button" disabled={!isConnected || isPending || !registrationUri} onClick={() => void register(false)} className="rounded-full bg-white px-4 py-2 text-sm font-medium text-black disabled:opacity-40">
-            {isPending ? "Waiting for wallet…" : "Register on Celo"}
+          <button type="button" disabled={!isConnected || isPending || !registrationUri} onClick={() => void register(false)} className="btn-ink">
+            <span>{isPending ? "Waiting for wallet…" : "Register on Celo"}</span>
+            <Knob />
           </button>
           {identity ? (
-            <button type="button" disabled={!isConnected || isPending} onClick={() => void register(true)} className="rounded-full border border-white/15 px-4 py-2 text-sm text-zinc-200">
+            <button type="button" disabled={!isConnected || isPending} onClick={() => void register(true)} className="chip">
               Update URI
             </button>
           ) : null}
         </div>
-        {message ? <p className="mt-3 text-sm text-zinc-300">{message}</p> : null}
+        {message ? <p className="mt-3 text-[14px] text-ink">{message}</p> : null}
       </section>
     </div>
   );
@@ -163,10 +166,10 @@ function parseIdentity(raw: string): IdentityRecord | null {
 function Row({ label, value, href }: { label: string; value: string; href?: string }) {
   return (
     <div className="flex flex-wrap justify-between gap-3">
-      <dt className="text-zinc-500">{label}</dt>
-      <dd className="max-w-[28rem] text-right break-all text-zinc-200">
+      <dt className="text-muted">{label}</dt>
+      <dd className="max-w-[28rem] text-right break-all text-ink">
         {href ? (
-          <a className="underline decoration-white/20" href={href} target="_blank" rel="noreferrer">
+          <a className="link" href={href} target="_blank" rel="noreferrer">
             {value}
           </a>
         ) : (

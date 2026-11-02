@@ -16,27 +16,34 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   return (
     <div className="min-h-full">
-      <header className="sticky top-0 z-20 border-b border-white/10 bg-[#070708]/85 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-3">
-          <Link href="/" className="flex items-center gap-2 text-white">
-            <Mark className="h-7 w-7" />
-            <span className="text-sm font-medium tracking-[0.18em]">FLUX</span>
-          </Link>
-          <nav className="order-3 flex w-full gap-1 sm:order-none sm:w-auto">
+      <header className="sticky top-0 z-20 px-4 pt-4">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex min-w-0 items-center justify-between gap-3">
+            <Link href="/" className="flex items-center gap-2 text-ink">
+              <Mark className="h-7 w-7" />
+              <span className="text-[18px] font-[520] tracking-[-0.03em]">Flux</span>
+            </Link>
+            <div className="sm:hidden">
+              <ConnectButton showBalance={false} chainStatus="none" accountStatus="avatar" label="Connect" />
+            </div>
+          </div>
+          <nav className="glass-pill flex w-full max-w-full gap-1 overflow-x-auto p-1 sm:w-auto">
             {LINKS.map((link) => {
               const active = pathname === link.href;
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`rounded-full px-3 py-1.5 text-sm ${active ? "bg-white text-black" : "text-zinc-400 hover:text-white"}`}
+                  className={`shrink-0 rounded-full px-3 py-1.5 text-[13px] tracking-[-0.01em] ${active ? "bg-ink text-white" : "text-muted hover:text-ink"}`}
                 >
                   {link.label}
                 </Link>
               );
             })}
           </nav>
-          <ConnectButton showBalance={false} chainStatus="icon" accountStatus="address" />
+          <div className="hidden sm:block">
+            <ConnectButton showBalance={false} chainStatus="icon" accountStatus="address" />
+          </div>
         </div>
       </header>
       <main>{children}</main>

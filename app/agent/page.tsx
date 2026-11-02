@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { Kicker, Knob } from "@/components/frame";
 import { MODALITY_META, type Modality } from "@/lib/modalities";
 
 type Turn = { role: "user" | "assistant"; content: string; plan?: { modality: Modality; prompt: string; source: "grok" | "keywords" } };
@@ -47,29 +48,28 @@ export default function AgentPage() {
   }
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-10">
+    <div className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-12 md:py-16">
       <div>
-        <h1 className="text-3xl font-medium tracking-tight">Agent</h1>
-        <p className="mt-2 text-sm leading-6 text-zinc-400">
-          The agent proposes a generation. It cannot sign or spend. With <span className="font-mono">XAI_API_KEY</span> set, the plan comes from Grok. Otherwise Flux uses the wording of your request.
+        <Kicker index="03">Agent</Kicker>
+        <h1 className="mt-4 text-[clamp(2rem,1.2rem+2vw,3rem)] leading-none font-[340] tracking-[-0.035em]">It proposes. It never pays.</h1>
+        <p className="mt-4 text-[15px] leading-7 text-muted">
+          The agent proposes a generation. It cannot sign or spend. With <span className="font-mono text-[13px]">XAI_API_KEY</span> set, the plan comes from Grok. Otherwise Flux uses the wording of your request.
         </p>
       </div>
       <div className="min-h-64 space-y-4">
-        {turns.length === 0 ? <p className="text-sm text-zinc-500">Try “a short film of a black geometric mark” or “a song about rain on the line”.</p> : null}
+        {turns.length === 0 ? <p className="text-[14px] text-muted">Try “a short film of a black geometric mark” or “a song about rain on the line”.</p> : null}
         {turns.map((turn, index) => (
           <article key={`${turn.role}-${index}`} className={turn.role === "user" ? "text-right" : ""}>
-            <p className={`inline-block max-w-[40rem] rounded-3xl px-4 py-3 text-left text-sm leading-6 ${turn.role === "user" ? "bg-white text-black" : "border border-white/10 text-zinc-200"}`}>
+            <p className={`inline-block max-w-[40rem] rounded-[22px] px-4 py-3 text-left text-[14px] leading-6 ${turn.role === "user" ? "bg-ink text-white" : "glass text-ink"}`}>
               {turn.content}
             </p>
             {turn.plan ? (
-              <div className="mt-2 text-left">
-                <Link
-                  href={`/studio?type=${turn.plan.modality}&prompt=${encodeURIComponent(turn.plan.prompt)}`}
-                  className="inline-flex rounded-full bg-[#8b7cff] px-4 py-2 text-sm text-white"
-                >
-                  Open {MODALITY_META[turn.plan.modality].label.toLowerCase()} in the studio
+              <div className="mt-3 text-left">
+                <Link href={`/studio?type=${turn.plan.modality}&prompt=${encodeURIComponent(turn.plan.prompt)}`} className="btn-ink">
+                  <span>Open {MODALITY_META[turn.plan.modality].label.toLowerCase()} in the studio</span>
+                  <Knob />
                 </Link>
-                <p className="mt-2 text-xs text-zinc-500">{turn.plan.source === "grok" ? "Planned by Grok" : "Planned from your wording. Set XAI_API_KEY to use Grok."}</p>
+                <p className="mt-2 text-[12px] text-muted">{turn.plan.source === "grok" ? "Planned by Grok" : "Planned from your wording. Set XAI_API_KEY to use Grok."}</p>
               </div>
             ) : null}
           </article>
@@ -80,13 +80,14 @@ export default function AgentPage() {
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
           placeholder="What should Flux make?"
-          className="flex-1 rounded-full border border-white/10 bg-black px-4 py-3 text-sm outline-none"
+          className="field flex-1 rounded-full outline-none"
         />
-        <button type="submit" disabled={busy || !draft.trim()} className="rounded-full bg-white px-5 py-3 text-sm font-medium text-black disabled:opacity-40">
-          {busy ? "Thinking…" : "Ask"}
+        <button type="submit" disabled={busy || !draft.trim()} className="btn-ink">
+          <span>{busy ? "Thinking…" : "Ask"}</span>
+          <Knob />
         </button>
       </form>
-      {error ? <p className="text-sm text-red-300">{error}</p> : null}
+      {error ? <p className="text-[14px] text-[#B02A35]">{error}</p> : null}
     </div>
   );
 }
