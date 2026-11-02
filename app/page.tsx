@@ -1,5 +1,5 @@
+import { HeroField } from "@/components/field";
 import { InkLink, Kicker } from "@/components/frame";
-import { Mark } from "@/components/mark";
 
 const STEPS = [
   {
@@ -28,38 +28,45 @@ const RAILS = [
 
 export default function Home() {
   return (
-    <div className="mx-auto flex max-w-6xl flex-col px-4 pb-20">
-      <section className="grid items-end gap-10 py-16 md:grid-cols-[1.25fr_0.75fr] md:py-24">
-        <div>
-          <Kicker>Celo · Agents on Open Rails</Kicker>
-          <h1 className="mt-5 max-w-[11em] text-[clamp(3.1rem,1.4rem+5vw,6.2rem)] leading-[0.92] font-[340] tracking-[-0.035em] text-ink">
-            Pay for the generation.
-          </h1>
-          <p className="mt-6 max-w-lg text-[17px] leading-7 tracking-[-0.015em] text-muted">
-            Flux is a studio for image, video, voice, and composition. The service names the price. You sign the stablecoin payment yourself.
-          </p>
-          <div className="mt-8">
-            <InkLink href="/studio">Open studio</InkLink>
+    <div className="pb-8">
+      <section className="relative overflow-hidden">
+        <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-8 px-4 py-14 md:grid-cols-[1.12fr_0.88fr] md:gap-12 md:py-20">
+          <div>
+            <Kicker>Celo · Agents on Open Rails</Kicker>
+            <h1 className="mt-5 max-w-[11em] text-[clamp(3.1rem,1.4rem+5vw,6.2rem)] leading-[0.92] font-[340] tracking-[-0.035em] text-ink">
+              Pay for the generation.
+            </h1>
+            <p className="mt-6 max-w-lg text-[17px] leading-7 tracking-[-0.015em] text-muted">
+              Flux is a studio for image, video, voice, and composition. The service names the price. You sign the stablecoin payment yourself.
+            </p>
+            <div className="mt-8">
+              <InkLink href="/studio">Open studio</InkLink>
+            </div>
+          </div>
+          <div className="flex flex-col gap-5">
+            <div className="relative min-h-[17rem] md:min-h-[22rem]">
+              <HeroField />
+            </div>
+            <aside className="glass relative rounded-[28px] p-6 text-ink md:p-7">
+              <p className="kicker">Unpaid quote · voice</p>
+              <p className="num mt-6 text-[4.5rem] leading-none text-ink">$0.006</p>
+              <p className="mt-3 text-[15px] tracking-[-0.015em] text-muted-2">USDC · eip155:42220 · EIP-3009</p>
+              <dl className="mt-6 space-y-3 border-t border-[rgba(120,145,180,0.2)] pt-5 text-[14px]">
+                <div className="flex items-baseline justify-between gap-4">
+                  <dt className="shrink-0 text-muted">Payee</dt>
+                  <dd className="min-w-0 truncate font-mono text-[12px] text-ink">0xaBF4…a9D0</dd>
+                </div>
+                <div className="flex items-baseline justify-between gap-4">
+                  <dt className="shrink-0 text-muted">Service</dt>
+                  <dd className="min-w-0 text-right text-ink">agent402 speech</dd>
+                </div>
+              </dl>
+              <p className="mt-5 text-[13px] leading-5 text-muted">Seen on the public app. Nothing in that quote was settled.</p>
+            </aside>
           </div>
         </div>
-        <aside className="glass relative rounded-[28px] p-6 text-ink md:p-7">
-          <p className="kicker">Unpaid quote · voice</p>
-          <p className="num mt-6 text-[4.5rem] leading-none text-ink">$0.006</p>
-          <p className="mt-3 text-[15px] tracking-[-0.015em] text-muted-2">USDC · eip155:42220 · EIP-3009</p>
-          <dl className="mt-6 space-y-3 border-t border-[rgba(120,145,180,0.2)] pt-5 text-[14px]">
-            <div className="flex items-baseline justify-between gap-4">
-              <dt className="shrink-0 text-muted">Payee</dt>
-              <dd className="min-w-0 truncate font-mono text-[12px] text-ink">0xaBF4…a9D0</dd>
-            </div>
-            <div className="flex items-baseline justify-between gap-4">
-              <dt className="shrink-0 text-muted">Service</dt>
-              <dd className="min-w-0 text-right text-ink">agent402 speech</dd>
-            </div>
-          </dl>
-          <p className="mt-5 text-[13px] leading-5 text-muted">Seen on the public app. Nothing in that quote was settled.</p>
-          <Mark className="absolute top-6 right-6 h-8 w-8 text-ink/80" />
-        </aside>
       </section>
+      <div className="mx-auto flex max-w-6xl flex-col px-4">
 
       <section className="grid gap-6 border-t border-[rgba(120,145,180,0.2)] py-16 sm:grid-cols-3">
         {[
@@ -75,7 +82,7 @@ export default function Home() {
         ))}
       </section>
 
-      <section className="border-t border-[rgba(120,145,180,0.2)] py-16 md:py-24">
+      <section id="purchase" className="scroll-mt-24 border-t border-[rgba(120,145,180,0.2)] py-16 md:py-24">
         <Kicker index="01">The purchase</Kicker>
         <h2 className="mt-5 max-w-[16em] text-balance text-[clamp(2.05rem,1.2rem+2.4vw,3.4rem)] leading-[1.05] font-[340] tracking-[-0.035em]">
           One prompt. A price on screen. Then a signature.
@@ -91,7 +98,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="border-t border-[rgba(120,145,180,0.2)] py-16 md:py-24">
+      <section id="paid" className="scroll-mt-24 border-t border-[rgba(120,145,180,0.2)] py-16 md:py-24">
         <Kicker index="02">What gets paid</Kicker>
         <h2 className="mt-5 max-w-[16em] text-balance text-[clamp(2.05rem,1.2rem+2.4vw,3.4rem)] leading-[1.05] font-[340] tracking-[-0.035em]">
           The seller names the asset. Flux does not invent one.
@@ -127,7 +134,7 @@ export default function Home() {
         </p>
       </section>
 
-      <section className="border-t border-[rgba(120,145,180,0.2)] py-16 md:flex md:items-end md:justify-between md:gap-10">
+      <section id="boundary" className="scroll-mt-24 border-t border-[rgba(120,145,180,0.2)] py-16 md:flex md:items-end md:justify-between md:gap-10">
         <div>
           <Kicker index="03">The boundary</Kicker>
           <h2 className="mt-5 max-w-[14em] text-balance text-[clamp(2.05rem,1.2rem+2.4vw,3.4rem)] leading-[1.05] font-[340] tracking-[-0.035em]">
@@ -141,6 +148,7 @@ export default function Home() {
           <InkLink href="/studio">Open studio</InkLink>
         </div>
       </section>
+      </div>
     </div>
   );
 }

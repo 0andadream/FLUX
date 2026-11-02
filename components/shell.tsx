@@ -3,6 +3,7 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Footer } from "./footer";
 import { Mark } from "./mark";
 
 const LINKS = [
@@ -19,9 +20,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <header className="sticky top-0 z-20 px-4 pt-4">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex min-w-0 items-center justify-between gap-3">
-            <Link href="/" className="flex items-center gap-2 text-ink">
-              <Mark className="h-7 w-7" />
-              <span className="text-[18px] font-[520] tracking-[-0.03em]">Flux</span>
+            <Link href="/" className="flex items-center gap-2 text-ink" aria-label="Flux home">
+              <Mark className="h-7 w-auto aspect-[202/174]" />
+              <span className="text-[13px] font-[560] tracking-[0.22em]">FLUX</span>
             </Link>
             <div className="sm:hidden">
               <ConnectButton showBalance={false} chainStatus="none" accountStatus="avatar" label="Connect" />
@@ -47,6 +48,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       <main>{children}</main>
+      <Footer />
     </div>
   );
 }
