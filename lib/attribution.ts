@@ -1,11 +1,11 @@
-import { codeFromRepo, toDataSuffix } from "@celo/attribution-tags";
+import { toDataSuffix } from "@celo/attribution-tags";
 
-const REPO = "0andadream/FLUX";
+// The code Loops issued for this entry. A repo-derived code is a different value.
+const ISSUED = "celo_9f870c6e79fb";
 
-// One code only. Loops matches the GitHub-repo code and ignores a suffix that also carries another code.
 export function attributionCodes() {
   const issued = process.env.NEXT_PUBLIC_ATTRIBUTION_TAG?.trim();
-  return [issued || codeFromRepo(REPO)];
+  return [issued || ISSUED];
 }
 
 export function attributionCode() {
